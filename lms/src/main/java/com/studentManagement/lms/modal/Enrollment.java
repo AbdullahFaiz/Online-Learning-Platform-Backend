@@ -1,10 +1,12 @@
 package com.studentManagement.lms.modal;
 
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "enrollments")
+@NoArgsConstructor
 public class Enrollment {
 
     @Id
@@ -12,11 +14,9 @@ public class Enrollment {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "student_id")
-    private Student student;
+    private User user;
 
     @ManyToOne
-    @JoinColumn(name = "course_id")
     private Course course;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -31,12 +31,12 @@ public class Enrollment {
         this.id = id;
     }
 
-    public Student getStudent() {
-        return student;
+    public User getUser() {
+        return user;
     }
 
-    public void setStudent(Student student) {
-        this.student = student;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Course getCourse() {

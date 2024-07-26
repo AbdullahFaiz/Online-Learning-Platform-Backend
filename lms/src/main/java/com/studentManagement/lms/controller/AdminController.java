@@ -1,46 +1,74 @@
 package com.studentManagement.lms.controller;
 
-import com.studentManagement.lms.modal.Student;
-import com.studentManagement.lms.service.StudentService;
+import com.studentManagement.lms.modal.Role;
+import com.studentManagement.lms.modal.User;
+import com.studentManagement.lms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
-@RequestMapping("/api/students")
+@RequestMapping("/api/admins")
 public class AdminController {
 
     @Autowired
-    private StudentService studentService;
+    private UserService userService;
 
     @GetMapping
-    public List<Student> getAllStudents() {
-        return studentService.getAllStudents();
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<User> getAllAdmins() {
+        return userService.getUsersByRole(Role.ROLE_ADMIN);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
-        Student student = studentService.getStudentById(id);
-        return ResponseEntity.ok(student);
+    @PreAuthorize("hasRole('ADMIN')")
+    public User getAdminById(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        if (user != null && user.getRole() == Role.ROLE_ADMIN) {
+            return user;
+        }
+        throw new RuntimeException("Admin not found or not authorized");
     }
 
     @PostMapping
-    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
-        Student newStudent = studentService.createStudent(student);
-        return ResponseEntity.ok(newStudent);
+    @PreAuthorize("hasRole('ADMIN')")
+    public User createAdmin(@RequestBody User user) {
+        user.setRole(Role.ROLE_ADMIN);
+        return userService.createUser(user);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student student) {
-        Student updatedStudent = studentService.updateStudent(id, student);
-        return ResponseEntity.ok(updatedStudent);
+    @PreAuthorize("hasRole('ADMIN')")
+    public User updateAdmin(@PathVariable Long id, @RequestBody User userDetails) {
+        userDetails.setRole(Role.ROLE_ADMIN);
+        return userService.updateUser(id, userDetails);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
-        studentService.deleteStudent(id);
-        return ResponseEntity.noContent().build();
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteAdmin(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        if (user != null && user.getRole() == Role.ROLE_ADMIN) {
+            userService.deleteUser(id);
+        } else {
+            throw new RuntimeException("Admin not found or not authorized");
+        }
     }
+
+    @GetMapping("/createAdmin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String initaiteAdminCredtentials() {
+        User admin = new User("admin","Ab@12345","admin@gmail.com",Role.ROLE_ADMIN);
+        if (!userService.existByUsername(admin.getUsername())){
+            this.userService.createUser(admin);
+            return "Default Admin Created Successfully";
+        }
+        return "Default Admin Already Exists";
+
+    }
+
+
 }

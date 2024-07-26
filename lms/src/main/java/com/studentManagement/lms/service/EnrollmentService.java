@@ -28,7 +28,7 @@ public class EnrollmentService {
     public Enrollment updateEnrollment(Long id, Enrollment enrollment) {
         Enrollment existingEnrollment = enrollmentRepository.findById(id).orElse(null);
         if (existingEnrollment != null) {
-            existingEnrollment.setStudent(enrollment.getStudent());
+            existingEnrollment.setUser(enrollment.getUser());
             existingEnrollment.setCourse(enrollment.getCourse());
             existingEnrollment.setEnrollmentDate(enrollment.getEnrollmentDate());
             return enrollmentRepository.save(existingEnrollment);

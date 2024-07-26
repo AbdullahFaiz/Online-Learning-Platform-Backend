@@ -1,9 +1,7 @@
 package com.studentManagement.lms.controller;
 
-import com.studentManagement.lms.dto.JwtResponse;
+import com.studentManagement.lms.dto.LoginResponse;
 import com.studentManagement.lms.dto.LoginRequest;
-import com.studentManagement.lms.dto.RegisterRequest;
-import com.studentManagement.lms.modal.User;
 import com.studentManagement.lms.repository.UserRepository;
 import com.studentManagement.lms.service.AuthService;
 import com.studentManagement.lms.util.JwtTokenUtil;
@@ -11,10 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import com.studentManagement.lms.modal.User;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -35,13 +37,13 @@ public class AuthController {
     private PasswordEncoder encoder;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
-        if (userRepository.existsByUsername(registerRequest.getUsername())) {
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
+        if (userRepository.existsByUsername(user.getUsername())) {
             return ResponseEntity.badRequest().body("Error: Username is already taken!");
         }
 
-//        User user = new User(registerRequest.getUsername(), encoder.encode(registerRequest.getPassword()), "STUDENT");
-//        userRepository.save(user);
+        User newUser = new User(user.getUsername(), encoder.encode(user.getPassword()), user.getEmail(),user.getRole());
+        userRepository.save(user);
 
         return ResponseEntity.ok("User registered successfully!");
     }
@@ -55,7 +57,16 @@ public class AuthController {
         final UserDetails userDetails = authService.loadUserByUsername(loginRequest.getUsername());
 
         final String token = jwtTokenUtil.generateToken(userDetails);
+        User user = userRepository.findByUsername(loginRequest.getUsername());
+        return ResponseEntity.ok(new LoginResponse(token,user));
+    }
 
-        return ResponseEntity.ok(new JwtResponse(token));
+    @GetMapping("/me")
+    public ResponseEntity<User> getUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        // Fetch user details based on username
+        User user = userRepository.findByUsername(username);
+        return ResponseEntity.ok(user);
     }
 }

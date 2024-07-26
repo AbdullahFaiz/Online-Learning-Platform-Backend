@@ -1,9 +1,12 @@
 package com.studentManagement.lms.modal;
 
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -12,11 +15,14 @@ public class User {
     @Column(unique = true)
     private String username;
     private String password;
+
+    private String email;
     private Role role;
 
-    public User(String username, String password, Role role) {
+    public User(String username, String password, String email, Role role) {
         this.username = username;
         this.password = password;
+        this.email = email;
         this.role = role;
     }
 
@@ -42,6 +48,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Role getRole() {
