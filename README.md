@@ -46,3 +46,31 @@ StudentController (for student-related endpoints)
 CourseController (for course-related endpoints)
 EnrollmentController (for enrollment-related endpoints)
 AdminController (for admin-specific endpoints)
+
+
+****Backend Project Setup****
+
+**Prerequisites**
+Java 8
+Maven 
+MySQL Database
+
+Clone the repository
+Update the database connection details in the application.properties or application.yml file.
+Maven Build the project
+Running the Application
+Make a GET request to the endpoint http://localhost:8080/createAdmin to create an admin user with Username "Admin" and "Ab@12345" as password.
+The backend services will be accessible at http://localhost:8080 once started.
+
+
+****Frontend Project Setup****
+Prerequisites
+Node.js
+npm
+Angular
+
+Clone the repository
+Navigate to the project directory
+Install Dependencies using "npm install" command
+Start the development server using "ng serve" command
+The Angular frontend services wil be accessible at http://localhost:8080 once started.
