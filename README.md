@@ -39,24 +39,24 @@ Key Features:
    MySQL Database
 
 ## Setup
-  Clone the repository 
-  Update the database connection details in the application.properties or application.yml file. 
-  Maven Build the project 
-  Start the Application
-  Make a GET request to the endpoint `http://localhost:8080/createAdmin` to create an admin user with Username "Admin" and "Ab@12345" as password. 
-  The backend services will be accessible at `http://localhost:8080` once started.
+  *Clone the repository 
+  *Update the database connection details in the application.properties or application.yml file. 
+  *Maven Build the project 
+  *Start the Application
+  *Make a GET request to the endpoint `http://localhost:8080/createAdmin` to create an admin user with Username "Admin" and "Ab@12345" as password. 
+  *The backend services will be accessible at `http://localhost:8080` once started.
 
 ##Frontend Project Setup 
 
 
 **Prerequisites** 
-  Node.js 
-  npm 
-  Angular
+  *Node.js 
+  *npm 
+  *Angular
 
 ## Setup
-  Clone the repository 
-  Navigate to the project directory 
-  Install Dependencies using `npm install` command 
-  Start the development server using `ng serve` command 
-  The Angular frontend services wil be accessible at `http://localhost:4200` once started.
+  *Clone the repository 
+  *Navigate to the project directory 
+  *Install Dependencies using `npm install` command 
+  *Start the development server using `ng serve` command 
+  *The Angular frontend services wil be accessible at `http://localhost:4200` once started.
