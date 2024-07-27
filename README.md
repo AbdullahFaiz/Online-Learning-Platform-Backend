@@ -73,4 +73,4 @@ Clone the repository
 Navigate to the project directory
 Install Dependencies using "npm install" command
 Start the development server using "ng serve" command
-The Angular frontend services wil be accessible at http://localhost:8080 once started.
+The Angular frontend services wil be accessible at http://localhost:4200 once started.
