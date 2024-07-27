@@ -26,7 +26,11 @@ public class EnrollmentController {
         Enrollment enrollment = enrollmentService.getEnrollmentById(id);
         return ResponseEntity.ok(enrollment);
     }
-
+    @GetMapping("/student/{id}")
+    public List<Enrollment> getEnrollmentByStudentId(@PathVariable Long id) {
+        List<Enrollment> enrollment = enrollmentService.getEnrollmentByStudentId(id);
+        return enrollment;
+    }
     @PostMapping
     public ResponseEntity<Enrollment> createEnrollment(@RequestBody Enrollment enrollment) {
         Enrollment newEnrollment = enrollmentService.createEnrollment(enrollment);

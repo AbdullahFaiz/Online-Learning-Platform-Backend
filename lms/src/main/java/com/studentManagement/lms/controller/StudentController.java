@@ -1,14 +1,14 @@
 package com.studentManagement.lms.controller;
 
-import com.studentManagement.lms.modal.Role;
-import com.studentManagement.lms.modal.User;
+
+import com.studentManagement.lms.modal.Student;
+import com.studentManagement.lms.service.StudentService;
 import com.studentManagement.lms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 
 @CrossOrigin
 @RestController
@@ -18,40 +18,35 @@ public class StudentController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private StudentService studentService;
+
     @GetMapping
-    public List<User> getAllStudents() {
-        return userService.getUsersByRole(Role.ROLE_STUDENT);
+    public List<Student> getAllStudents() {
+        return studentService.getAllStudents();
     }
 
     @GetMapping("/{id}")
-    public User getStudentById(@PathVariable Long id) {
-        User user = userService.getUserById(id);
-        if (user != null && user.getRole() == Role.ROLE_STUDENT) {
-            return user;
-        }
-        throw new RuntimeException("Student not found");
+    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
+        Student student = studentService.getStudentById(id).orElseThrow(() -> new RuntimeException("Student not found with id " + id));
+        return ResponseEntity.ok(student);
     }
 
     @PostMapping
-    public User createStudent(@RequestBody User user) {
-        user.setRole(Role.ROLE_STUDENT);
-        return userService.createUser(user);
+    public Student createStudent(@RequestBody Student student) {
+        return studentService.createStudent(student);
     }
 
     @PutMapping("/{id}")
-    public User updateStudent(@PathVariable Long id, @RequestBody User userDetails) {
-        userDetails.setRole(Role.ROLE_STUDENT);
-        return userService.updateUser(id, userDetails);
+    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student studentDetails) {
+        Student updatedStudent = studentService.updateStudent(id, studentDetails);
+        return ResponseEntity.ok(updatedStudent);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteStudent(@PathVariable Long id) {
-        User user = userService.getUserById(id);
-        if (user != null && user.getRole() == Role.ROLE_STUDENT) {
-            userService.deleteUser(id);
-        } else {
-            throw new RuntimeException("Student not found");
-        }
+    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
+        studentService.deleteStudent(id);
+        return ResponseEntity.noContent().build();
     }
 
 

@@ -14,7 +14,7 @@ public class Enrollment {
     private Long id;
 
     @ManyToOne
-    private User user;
+    private Student student;
 
     @ManyToOne
     private Course course;
@@ -31,12 +31,12 @@ public class Enrollment {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public Student getStudent() {
+        return student;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
     public Course getCourse() {

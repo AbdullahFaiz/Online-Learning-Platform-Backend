@@ -2,8 +2,10 @@ package com.studentManagement.lms.controller;
 
 import com.studentManagement.lms.dto.LoginResponse;
 import com.studentManagement.lms.dto.LoginRequest;
+import com.studentManagement.lms.modal.Student;
 import com.studentManagement.lms.repository.UserRepository;
 import com.studentManagement.lms.service.AuthService;
+import com.studentManagement.lms.service.StudentService;
 import com.studentManagement.lms.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +37,9 @@ public class AuthController {
 
     @Autowired
     private PasswordEncoder encoder;
+
+    @Autowired
+    private StudentService studentService;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
@@ -68,5 +73,14 @@ public class AuthController {
         // Fetch user details based on username
         User user = userRepository.findByUsername(username);
         return ResponseEntity.ok(user);
+    }
+    @GetMapping("/student")
+    public ResponseEntity<Student> getStudent() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        // Fetch user details based on username
+        User user = userRepository.findByUsername(username);
+        Student student = studentService.getStudentByUser(user);
+        return ResponseEntity.ok(student);
     }
 }
