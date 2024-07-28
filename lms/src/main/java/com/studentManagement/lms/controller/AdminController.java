@@ -59,7 +59,6 @@ public class AdminController {
     }
 
     @GetMapping("/createAdmin")
-    @PreAuthorize("hasRole('ADMIN')")
     public String initaiteAdminCredtentials() {
         User admin = new User("admin","Ab@12345","admin@gmail.com",Role.ROLE_ADMIN);
         if (!userService.existByUsername(admin.getUsername())){
