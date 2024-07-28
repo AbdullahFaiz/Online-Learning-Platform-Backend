@@ -31,22 +31,30 @@ public class UserService {
     }
 
     public User createUser(User user) {
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new RuntimeException("Username already exists");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
     public User updateUser(Long id, User userDetails) {
         User user = userRepository.findById(id).orElse(null);
-        if (user != null) {
-            user.setUsername(userDetails.getUsername());
-            user.setEmail(userDetails.getEmail());
-            user.setRole(userDetails.getRole());
-            if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
-                user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
-            }
-            return userRepository.save(user);
+        if (user == null) {
+            throw new RuntimeException("User not found");
         }
-        return null;
+
+        if (!user.getUsername().equals(userDetails.getUsername()) && userRepository.existsByUsername(userDetails.getUsername())) {
+            throw new RuntimeException("Username already exists");
+        }
+
+        user.setUsername(userDetails.getUsername());
+        user.setEmail(userDetails.getEmail());
+        user.setRole(userDetails.getRole());
+        if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
+        }
+        return userRepository.save(user);
     }
 
     public void deleteUser(Long id) {
